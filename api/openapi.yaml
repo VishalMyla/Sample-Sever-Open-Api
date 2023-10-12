@@ -1,0 +1,84 @@
+openapi: 3.0.3
+info:
+  title: Backend Docs - OpenAPI 3.0
+  version: 0.0.1
+servers:
+- url: https://localhost.com/api
+tags:
+- name: user
+paths:
+  /auth/signup:
+    post:
+      operationId: authSignupPOST
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/User'
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/_auth_signup_post_200_response'
+          description: Successfully created the user
+        "500":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/_auth_signup_post_500_response'
+          description: Could not create the user
+      summary: Signup user and returns auth token
+      tags:
+      - user
+      x-eov-operation-handler: controllers/UserController
+components:
+  schemas:
+    User:
+      example:
+        uid: uid
+        image: image
+        password: password
+        updated_at: updated_at
+        last_name: James
+        created_at: created_at
+        first_name: John
+        email: john@email.com
+      properties:
+        uid:
+          type: string
+        first_name:
+          example: John
+          type: string
+        last_name:
+          example: James
+          type: string
+        password:
+          description: This will not be saved in database
+          type: string
+        email:
+          example: john@email.com
+          type: string
+        image:
+          description: Image link
+          type: string
+        created_at:
+          type: string
+        updated_at:
+          type: string
+      type: object
+    _auth_signup_post_200_response:
+      example:
+        authtoken: authtoken
+      properties:
+        authtoken:
+          description: JWT Token'
+          type: string
+      type: object
+    _auth_signup_post_500_response:
+      properties:
+        error:
+          description: Error Message
+          example: Email address could not be verified.
+          type: string
+      type: object
